@@ -5,6 +5,7 @@ import com.myapp.data.local.dao.ReviewHistoryDao
 import com.myapp.data.local.dao.UserProgressDao
 import com.myapp.data.local.dao.VocabularyDao
 import com.myapp.data.mapper.toDomain
+import com.myapp.data.mapper.toEntity
 import com.myapp.data.remote.api.JapaneseApi
 import com.myapp.data.remote.dto.ReviewSubmitRequest
 import com.myapp.domain.repository.ReviewRepository
@@ -100,7 +101,7 @@ class ReviewRepositoryImpl @Inject constructor(
             if (response.isSuccessful) {
                 val paginated = response.body() ?: throw Exception("Empty response")
                 reviewHistoryDao.insertAll(paginated.items.map {
-                    com.myapp.data.mapper.toEntity(it)
+                    it.toEntity()
                 })
                 paginated.items.map { it.toDomain() }
             } else {

@@ -6,6 +6,7 @@ import com.myapp.data.remote.dto.RefreshRequest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
+import javax.inject.Provider
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class TokenRefreshAuthenticator @Inject constructor(
     private val userPreferences: UserPreferences,
-    private val japaneseApi: JapaneseApi,
+    private val japaneseApi: Provider<JapaneseApi>,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -34,7 +35,7 @@ class TokenRefreshAuthenticator @Inject constructor(
 
         val newToken = try {
             val refreshResponse = runBlocking {
-                japaneseApi.refreshToken(RefreshRequest(refreshToken))
+                japaneseApi.get().refreshToken(RefreshRequest(refreshToken))
             }
             if (refreshResponse.isSuccessful) {
                 val tokenResponse = refreshResponse.body() ?: return null
@@ -54,7 +55,7 @@ class TokenRefreshAuthenticator @Inject constructor(
             return null
         }
 
-        response.request.newBuilder()
+        return response.request.newBuilder()
             .header("Authorization", "Bearer $newToken")
             .build()
     }

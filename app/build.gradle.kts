@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.retrofit)
