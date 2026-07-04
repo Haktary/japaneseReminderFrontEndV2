@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">japaneseReminderAppV2</string>
+    <string name="app_name">Japanese</string>
+    <string name="channel_vocabulary_name">Vocabulary Learning</string>
+    <string name="channel_vocabulary_description">Daily vocabulary learning notifications</string>
+    <string name="channel_sync_name">Synchronization</string>
+    <string name="channel_sync_description">Background data synchronization</string>
 </resources>

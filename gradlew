@@ -89,7 +89,11 @@ if [ -n "$JAVA_HOME" ] ; then
         # IBM's JDK on AIX uses strange locations for the executables
         JAVACMD="$JAVA_HOME/jre/sh/java"
     else
-        JAVACMD="$JAVA_HOME/bin/java"
+        if [ -x "$JAVA_HOME/bin/java.exe" ] ; then
+            JAVACMD="$JAVA_HOME/bin/java.exe"
+        else
+            JAVACMD="$JAVA_HOME/bin/java"
+        fi
     fi
     if [ ! -x "$JAVACMD" ] ; then
         die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
@@ -171,6 +175,14 @@ if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
         9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
     esac
 fi
+
+# For WSL with Windows JDK, convert paths to Windows format
+case "$JAVACMD" in
+  *.exe)
+    APP_HOME=$(wslpath -w "$APP_HOME")
+    CLASSPATH=$(wslpath -w "$CLASSPATH")
+    ;;
+esac
 
 # Escape application args
 save () {
