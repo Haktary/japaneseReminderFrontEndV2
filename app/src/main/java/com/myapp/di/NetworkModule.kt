@@ -1,9 +1,9 @@
 package com.myapp.di
 
-import com.myapp.BuildConfig
 import com.myapp.data.remote.api.JapaneseApi
 import com.myapp.data.remote.interceptor.AuthInterceptor
 import com.myapp.data.remote.interceptor.TokenRefreshAuthenticator
+import com.myapp.core.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL_DEBUG = "http://10.0.2.2:8000/"
-    private const val BASE_URL_RELEASE = "https://api.japanese.app/"
     private const val CONNECT_TIMEOUT = 30L
     private const val READ_TIMEOUT = 30L
     private const val WRITE_TIMEOUT = 30L
@@ -68,15 +66,8 @@ object NetworkModule {
         okHttpClient: OkHttpClient,
         json: Json,
     ): Retrofit {
-        val baseUrl = try {
-            val isDebug = BuildConfig.DEBUG
-            if (isDebug) BASE_URL_DEBUG else BASE_URL_RELEASE
-        } catch (e: Exception) {
-            BASE_URL_RELEASE
-        }
-
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(Constants.API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()

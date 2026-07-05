@@ -5,6 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.myapp.ui.home.HomeScreen
+import com.myapp.ui.login.LoginScreen
+import com.myapp.ui.register.RegisterScreen
+import com.myapp.ui.splash.SplashScreen
 
 @Composable
 fun AppNavHost(
@@ -15,19 +19,54 @@ fun AppNavHost(
         startDestination = Screen.Splash.route,
     ) {
         composable(Screen.Splash.route) {
-            PlaceholderScreen(name = "Splash")
+            SplashScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+            )
         }
 
         composable(Screen.Login.route) {
-            PlaceholderScreen(name = "Login")
+            LoginScreen(
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Register.route)
+                },
+            )
         }
 
         composable(Screen.Register.route) {
-            PlaceholderScreen(name = "Register")
+            RegisterScreen(
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Register.route) { inclusive = true }
+                    }
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+            )
         }
 
         composable(Screen.Home.route) {
-            PlaceholderScreen(name = "Home")
+            HomeScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+            )
         }
 
         composable(Screen.Settings.route) {

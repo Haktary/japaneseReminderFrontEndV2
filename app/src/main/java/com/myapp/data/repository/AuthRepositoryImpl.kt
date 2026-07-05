@@ -20,7 +20,10 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<User> = Result.wrap {
-        val response = api.login(LoginRequest(email, password))
+        val truncatedPassword = password.encodeToByteArray().let { bytes ->
+            if (bytes.size > 72) bytes.copyOf(72).decodeToString() else password
+        }
+        val response = api.login(LoginRequest(email, truncatedPassword))
         if (response.isSuccessful) {
             val authResponse = response.body() ?: throw Exception("Empty response")
             userPreferences.saveTokens(
@@ -40,7 +43,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun register(email: String, username: String, password: String, fullName: String?): Result<User> = Result.wrap {
-        val response = api.register(RegisterRequest(email, username, password, fullName))
+        val truncatedPassword = password.encodeToByteArray().let { bytes ->
+            if (bytes.size > 72) bytes.copyOf(72).decodeToString() else password
+        }
+        val response = api.register(RegisterRequest(email, username, truncatedPassword, fullName))
         if (response.isSuccessful) {
             val authResponse = response.body() ?: throw Exception("Empty response")
             userPreferences.saveTokens(
